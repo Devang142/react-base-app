@@ -1,5 +1,5 @@
 # pull official base image
-FROM node:12.0-alpine
+FROM node:12.0-alpine as builder
 
 WORKDIR /app
 
@@ -9,5 +9,8 @@ RUN npm install
 
 COPY . ./
 
-CMD ["npm", "start"]
+RUN npm run build
+
+FROM nginx
+COPY --from=builder /app/build /usr/share/nginx/html
 
